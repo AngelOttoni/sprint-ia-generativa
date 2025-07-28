@@ -25,7 +25,7 @@ sprint-ia-generativa
 ### 1️⃣ Clone this repository
 
 ```bash
-git clone git@github.com:<your-username>/sprint-ia-generativa.git
+git clone git@github.com:AngelOttoni/sprint-ia-generativa.git
 cd sprint-ia-generativa
 ```
 
@@ -41,8 +41,6 @@ source .my_venv/bin/activate  # Linux / macOS
 ```bash
 pip install -r requirements.txt
 ```
-
-*(Create a `requirements.txt` if needed.)*
 
 ---
 
