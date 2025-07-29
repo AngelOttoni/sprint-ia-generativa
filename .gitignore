@@ -1,2 +1,3 @@
 .iaGen_venv/
 Gen_AI_APIs/.env
+agents/book_recommender/data/GoodReads_100k_books.csv
