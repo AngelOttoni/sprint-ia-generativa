@@ -1,10 +1,13 @@
 import pandas as pd
 from pathlib import Path
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP('books_search_engine')
 
 # Path to the CSV file containing the books dataset
 books_dataset = Path(__file__).parent / "./data/GoodReads_100k_books.csv"
 
-
+@mcp.tool()
 def search_engine(genre: str, pg_number: int, csv_path=books_dataset):
     """
     Search for books in a dataset by filtering based on genre and approximate
@@ -56,4 +59,4 @@ def search_engine(genre: str, pg_number: int, csv_path=books_dataset):
 
 if __name__ == "__main__":
     # Example usage: search for romance books with around 250 pages
-    print(search_engine("romance", 250))
+    mcp.run(transport='stdio')
