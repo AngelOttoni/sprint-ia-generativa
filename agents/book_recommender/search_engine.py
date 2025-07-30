@@ -61,38 +61,24 @@ def search_engine(genre: str, pg_number: int, csv_path=books_dataset):
 @mcp.tool()
 def search_engine_by_name(title: str):
     """
-    descricao:
-    Função para buscar as informações de um
-    livro dentro de uma base de dados
-    a partir do nome dele.
-    Importante que o nome do livro seja passado em inglês.
+    Search for a book by its title (case-insensitive, partial match).
+    The title should be provided in English.
 
     Args:
-        title (string): nome do livro (inglês)
+        title (str): The book title to search for.
 
     Returns:
-        dict: informações do livro:
-        author: The name of the author/authors of the book
-        bookformat: The format of the book
-        desc: The description of the book
-        genre: The list of genres related to the book
-        img: Image link of the book
-        isbn: ISBN code of the book
-        isbn13: ISBN13 code of the book
-        link: The goodreads links of the book
-        pages: Number of pages in the book
-        rating: Average rating of the book
-        reviews: The number of reviews the book has
-        title: The title of the book
-        totalratings: Totalratings of the book
+        list[dict]: List of books matching the title, each represented as a dictionary
+                    containing keys such as author, bookformat, desc, genre, img, isbn,
+                    isbn13, link, pages, rating, reviews, title, and totalratings.
     """
     dataset = pd.read_csv(books_dataset, encoding='utf-8')
+    filtered = dataset[dataset['title'].str.contains(title, case=False, na=False)]
 
-    dataset = dataset[dataset['title'].str.contains(title, case=False, na=False)]
-
-    return dataset
+    # Convert filtered DataFrame to list of dictionaries
+    return filtered.to_dict(orient='records')
 
 
 if __name__ == '__main__':
-    # Example usage: search for romance books with around 250 pages
+    # Run the MCP server with stdio transport for local testing
     mcp.run(transport='stdio')
