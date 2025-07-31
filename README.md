@@ -55,8 +55,8 @@ sprint-ia-generativa/
 │
 ├── agents/
 │   └── book_recommender/       # LangChain + MCP book recommendation agent
-│       ├── chat.py             # Main agent script (interactive chat)
-│       ├── search_engine.py    # MCP tool to query local book dataset
+│       ├── main_agent.py       # Main agent script (interactive chat)
+│       ├── book_search_tool.py    # MCP tool to query local book dataset
 │       └── data/
 │           └── GoodReads_100k_books.csv # Books dataset
 │
