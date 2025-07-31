@@ -13,27 +13,27 @@ env_path = os.path.join(os.path.dirname(__file__), '../../Gen_AI_APIs/.env')
 load_dotenv(env_path)
 
 # Path to the search_engine.py script, which will be registered as a tool
-search_engine_path = Path(__file__).parent / 'search_engine.py'
+search_engine_path = Path(__file__).parent / 'book_search_tool.py'
 
 # Retrieve API keys and model name from environment variables
-openai_api_key = os.getenv('OPENAI_API_KEY')
-apify_api_key = os.getenv('APIFY_API_KEY')
-model = os.getenv('OPENAI_MODEL')
+key_openai = os.getenv('OPENAI_API_KEY')
+key_apify = os.getenv('APIFY_API_KEY')
+openai_model_name = os.getenv('OPENAI_MODEL')
 
 # Setup MultiServerMCPClient with two tools:
-# 1. 'books_search_engine' runs the local search_engine.py script via stdio
+# 1. 'books_search_tool' runs the local search_engine.py script via stdio
 # 2. 'apify' connects to Apify's goodreads-book-scraper actor via SSE with authorization
-client = MultiServerMCPClient(
+mcp_client = MultiServerMCPClient(
     {
-        'books_search_engine': {
+        'books_search_tool': {
             'command': 'python',
             'args': [str(search_engine_path)],
             'transport': 'stdio',
         },
-        'apify': {
+        'goodreads_scraper_tool': {
             'transport': 'sse',
             'url': 'https://mcp.apify.com/sse?actors=runtime/goodreads-book-scraper',
-            'headers': {'Authorization': f'Bearer {apify_api_key}'},
+            'headers': {'Authorization': f'Bearer {key_apify}'},
         },
     }
 )
@@ -41,10 +41,10 @@ client = MultiServerMCPClient(
 
 async def chat():
     # Initialize the OpenAI chat model with specified parameters
-    llm = ChatOpenAI(model=model, top_p=0.5, api_key=openai_api_key)
+    llm = ChatOpenAI(model=openai_model_name, top_p=0.5, api_key=key_openai)
 
     # Fetch tools registered in the MCP client
-    tools = await client.get_tools()
+    tools = await mcp_client.get_tools()
 
     # Create a REACT agent with the LLM and tools, including an in-memory checkpoint saver
     agent = create_react_agent(
